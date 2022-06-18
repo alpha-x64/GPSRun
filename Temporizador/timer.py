@@ -1,8 +1,8 @@
 from kivy.app import App
 
-class Crono(App):
+class Timer(App):
     def build(self):
         return
 
 if __name__ == "__main__":
-    Crono().run()
+    Timer().run()
