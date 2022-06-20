@@ -14,32 +14,32 @@ windowManager:
         Label:
             text : "Nombre de usuario: "
             size_hint : 0.2, 0.1
-            pos_hint : {"x":0.25, "top":0.9}
+            pos_hint : {"x":0.25, "top":0.8}
         TextInput:
             id : user
             multiline :False
-            size_hint : 0.3, 0.1
-            pos_hint : {"x" : 0.45, "top" : 0.9}
+            size_hint : 0.27, 0.1
+            pos_hint : {"x" : 0.45, "top" : 0.8}
         Label:
             text : "Contraseña: "
             size_hint : 0.2, 0.1
-            pos_hint : {"x" : 0.25, "top" : 0.7}
+            pos_hint : {"x" : 0.25, "top" : 0.6}
         TextInput:
             id : pwd
             multiline :False
-            size_hint : 0.3, 0.1
-            pos_hint : {"x" : 0.45, "top" : 0.7}
+            size_hint : 0.27, 0.1
+            pos_hint : {"x" : 0.45, "top" : 0.6}
         Button:
             text : "Crear una nueva cuenta"
             size_hint : 0.4, 0.1
-            pos_hint : {"x" : 0.33, "top" : 0.4}
+            pos_hint : {"x" : 0.33, "top" : 0.15}
             on_release: 
                 app.root.current = 'signup'
                 root.manager.transition.direction = "left"
         Button:
             text : "Ingresar"
             size_hint : 0.3, 0.1
-            pos_hint : {"x" : 0.39, "top" : 0.2}
+            pos_hint : {"x" : 0.39, "top" : 0.4}
             on_release: 
                 root.validate()
                 root.manager.transition.direction = "up"
