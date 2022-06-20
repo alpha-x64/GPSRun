@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from mysite.views import RankingTableView
+
 urlpatterns = [
+    path('ranking/', RankingTableView.as_view()),
     path('admin/', admin.site.urls),
 ]

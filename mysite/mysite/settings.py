@@ -31,10 +31,11 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'mysite',
+    'django_tables2',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
@@ -76,9 +77,9 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'my_database',
-        'USER': 'root',
-        'PASSWORD': 'root',
+        'NAME': 'mysqldatabase',
+        'USER': 'python',
+        'PASSWORD': 'python',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
