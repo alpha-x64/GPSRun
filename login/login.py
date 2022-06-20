@@ -28,21 +28,29 @@ def popFun():
   
 # class to accept user info and validate it
 class loginWindow(Screen):
-    email = ObjectProperty(None)
+    user = ObjectProperty(None)
     pwd = ObjectProperty(None)
+
+    users=pd.read_csv(dataFilePath)
+
     def validate(self):
   
         # validating if the email already exists 
-        if self.email.text not in users['Email'].unique():
+        if self.user.text not in users['Name'].unique():
             popFun()
         else:
-  
-            # switching the current screen to display validation result
-            sm.current = 'logdata'
-  
-            # reset TextInput widget
-            self.email.text = ""
-            self.pwd.text = ""
+
+            matching_creds  = (len(users[(users['Name'] == self.user.text) & (users['Password'].astype('str') == self.pwd.text)]) > 0)
+
+            if matching_creds:
+                # switching the current screen to display validation result
+                sm.current = 'logdata'
+    
+                # reset TextInput widget
+                self.user.text = ""
+                self.pwd.text = ""
+            else:
+                popFun()
   
   
 # class to accept sign up info  
@@ -57,9 +65,10 @@ class signupWindow(Screen):
                             columns = ['Name', 'Email', 'Password'])
         
         if self.name2.text != "":
-            df = pd.read_csv(dataFilePath)
-            print(df['Name'].unique)
-            if self.name2.text not in df['Name'].unique():
+
+            users=pd.read_csv(dataFilePath)
+
+            if self.name2.text not in users['Name'].unique():
                 
                 # if name2 does not exist already then append to the csv file
                 # change current screen to log in the user now 

@@ -7,16 +7,16 @@ windowManager:
   
 # GUI for the login window
 <loginWindow>:
-    email : email
+    user : user
     pwd : pwd
     FloatLayout:
         size: root.width, root.height
         Label:
-            text : "Correo electrónico: "
+            text : "Nombre de usuario: "
             size_hint : 0.2, 0.1
             pos_hint : {"x":0.25, "top":0.9}
         TextInput:
-            id : email
+            id : user
             multiline :False
             size_hint : 0.3, 0.1
             pos_hint : {"x" : 0.45, "top" : 0.9}
