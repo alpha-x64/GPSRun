@@ -8,7 +8,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.floatlayout import FloatLayout
 import pandas as pd
 
-loginDataFile = 'login/login.csv'
+dataFilePath = 'login/login.csv'
 
 # class to call the popup function
 class PopupWindow(Widget):
@@ -55,17 +55,24 @@ class signupWindow(Screen):
         # creating a DataFrame of the info
         user = pd.DataFrame([[self.name2.text, self.email.text, self.pwd.text]],
                             columns = ['Name', 'Email', 'Password'])
-        if self.email.text != "":
-            if self.email.text not in users['Email'].unique():
-  
-                # if email does not exist already then append to the csv file
+        
+        if self.name2.text != "":
+            df = pd.read_csv(dataFilePath)
+            print(df['Name'].unique)
+            if self.name2.text not in df['Name'].unique():
+                
+                # if name2 does not exist already then append to the csv file
                 # change current screen to log in the user now 
-                user.to_csv(loginDataFile, mode = 'a', header = False, index = False)
+                user.to_csv(dataFilePath, mode = 'a', header = False, index = False)
                 sm.current = 'login'
                 self.name2.text = ""
                 self.email.text = ""
                 self.pwd.text = ""
+            else:
+                
+                popFun()
         else:
+            
             # if values are empty or invalid show pop up
             popFun()
       
@@ -82,7 +89,7 @@ kv = Builder.load_file('login.kv')
 sm = windowManager()
   
 # reading all the data stored
-users=pd.read_csv(loginDataFile)
+users=pd.read_csv(dataFilePath)
   
 # adding screens
 sm.add_widget(loginWindow(name='login'))
