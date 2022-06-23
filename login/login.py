@@ -6,6 +6,10 @@ from kivy.properties import ObjectProperty
 from kivy.lang import Builder
 from kivy.uix.popup import Popup
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.anchorlayout import AnchorLayout
+from kivy.uix.video import Video
+from sqlalchemy import create_engine
+import pymysql
 import pandas as pd
 
 dataFilePath = 'login/login.csv'
@@ -31,16 +35,26 @@ class loginWindow(Screen):
     user = ObjectProperty(None)
     pwd = ObjectProperty(None)
 
-    users=pd.read_csv(dataFilePath)
+    def read_data():
+        sqlEngine = create_engine('mysql+pymysql://python:python@127.0.0.1:3306', pool_recycle=3600)
+        dbConnection = sqlEngine.connect()
+        frame = pd.read_sql("select * from mysqldatabase.mysite_user", dbConnection);
+        pd.set_option('display.expand_frame_repr', False)
 
+        dbConnection.close()
+
+        return frame
+
+    users = read_data()
+    
     def validate(self):
-  
+
         # validating if the email already exists 
-        if self.user.text not in users['Name'].unique():
+        if self.user.text not in self.users['username'].unique():
             popFun()
         else:
 
-            matching_creds  = (len(users[(users['Name'] == self.user.text) & (users['Password'].astype('str') == self.pwd.text)]) > 0)
+            matching_creds  = (len(self.users[(self.users['username'] == self.user.text) & (self.users['password'].astype('str') == self.pwd.text)]) > 0)
 
             if matching_creds:
                 # switching the current screen to display validation result
@@ -50,29 +64,57 @@ class loginWindow(Screen):
                 self.user.text = ""
                 self.pwd.text = ""
             else:
-                popFun()
-  
+                popFun()  
   
 # class to accept sign up info  
 class signupWindow(Screen):
     name2 = ObjectProperty(None)
     email = ObjectProperty(None)
     pwd = ObjectProperty(None)
+
+    def read_data():
+        sqlEngine = create_engine('mysql+pymysql://python:python@127.0.0.1:3306', pool_recycle=3600)
+        dbConnection = sqlEngine.connect()
+        frame = pd.read_sql("select * from mysqldatabase.mysite_user", dbConnection);
+        pd.set_option('display.expand_frame_repr', False)
+        
+        dbConnection.close()
+
+        return frame
+    
+    users = read_data()
+
     def signupbtn(self):
   
         # creating a DataFrame of the info
         user = pd.DataFrame([[self.name2.text, self.email.text, self.pwd.text]],
-                            columns = ['Name', 'Email', 'Password'])
+                            columns = ['username', 'email', 'password'])
         
         if self.name2.text != "":
 
-            users=pd.read_csv(dataFilePath)
+            
 
-            if self.name2.text not in users['Name'].unique():
-                
+            if self.name2.text not in self.users['username'].unique():
+
+                tablename = 'mysite_user'
+
                 # if name2 does not exist already then append to the csv file
                 # change current screen to log in the user now 
-                user.to_csv(dataFilePath, mode = 'a', header = False, index = False)
+
+                sqlEngine = create_engine('mysql+pymysql://python:python@127.0.0.1:3306/mysqldatabase', pool_recycle=3600)
+                dbConnection = sqlEngine.connect()
+
+                try:
+                    user.to_sql(tablename, con = sqlEngine, if_exists = 'append', index = False)
+                except ValueError as vx:
+                    print(vx)
+                except Exception as ex:
+                    print(ex)
+                else:
+                    print("Table %s created successfully."%tablename);
+                finally:
+                    dbConnection.close()
+
                 sm.current = 'login'
                 self.name2.text = ""
                 self.email.text = ""
@@ -84,7 +126,7 @@ class signupWindow(Screen):
             
             # if values are empty or invalid show pop up
             popFun()
-      
+        
 # class to display validation result
 class logDataWindow(Screen):
     pass
@@ -96,15 +138,12 @@ class windowManager(ScreenManager):
 # kv file
 kv = Builder.load_file('login.kv')
 sm = windowManager()
-  
-# reading all the data stored
-users=pd.read_csv(dataFilePath)
-  
+
 # adding screens
 sm.add_widget(loginWindow(name='login'))
 sm.add_widget(signupWindow(name='signup'))
 sm.add_widget(logDataWindow(name='logdata'))
-  
+
 # class that builds gui
 class loginMain(App):
     def build(self):
