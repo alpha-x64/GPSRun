@@ -1,15 +1,27 @@
-from kivymd.app import MDApp
+from kivy.app import App
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
-from kivy.uix.floatlayout import FloatLayout
 from kivy_garden.mapview import MapView
 
-class MapViewExample(FloatLayout):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
 
-class Gps(MDApp):
+class FirstW(Screen):
+    pass
+
+class GpsW(Screen):
+    pass
+
+class WindowManager(ScreenManager):
+    pass
+
+kv = Builder.load_file('gps.kv')
+sm = ScreenManager()
+
+sm.add_widget(FirstW(name='first'))
+sm.add_widget(GpsW(name='gps'))
+
+class GpsApp(App):
     def build(self):
-        return MapViewExample()
+        return sm
 
-if __name__ == '__main__':
-    Gps().run()
+if __name__ == "__main__":
+    GpsApp().run()
