@@ -1,0 +1,72 @@
+#: import MapView kivy_garden
+WindowManager:
+    FirstW:
+    GpsRun:
+    GameOver:
+    WinW:
+
+<FirstW>:
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+
+        Label:
+            text: "Bienvenido a GpsRun \n tu reto es bla bla bla... Entendido?"
+            font_size: 32
+
+        Button:
+            text: "Ok"
+            font_size: 32
+            on_release: app.root.current = 'gpsrun'
+
+<GpsRun>:
+    markup: True
+
+    TabbedPanel:
+        do_default_tab: False
+        
+        TabbedPanelItem:
+            text: "Desafío"
+
+            BoxLayout:
+                orientation: "vertical"
+
+                Label: 
+                    text: "Acertijo.... \n Tienes 10 segundos"
+
+        TabbedPanelItem:
+            text: "Mapa"
+
+            BoxLayout:
+                orientation: "vertical"
+                MapView:
+                    lat:-38.74769124798811
+                    lon:-72.6168291093502
+                    zoom: 100
+
+        TabbedPanelItem:
+            text: "Tiempo"
+
+            BoxLayout:
+                orientation: "vertical"
+
+                Label: 
+                    text: "00:00"
+                    font_size: 20
+
+        TabbedPanelItem:
+            text: "Instrucciones"
+            
+<GameOver>:
+    BoxLayout:
+        orientation: "vertical"
+
+        Label:
+            text: "Se acabó el tiempo..."
+<WinW>:
+    BoxLayout:
+        orientation:"vertical"
+
+        Label: 
+            text: "Lo lograste!"
+    
