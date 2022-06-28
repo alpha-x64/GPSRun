@@ -13,6 +13,8 @@ import pymysql
 import pandas as pd
 
 dataFilePath = 'login/login.csv'
+host = 'bruselas.ceisufro.cl'
+netPort = '3306'
 
 # class to call the popup function
 class PopupWindow(Widget):
@@ -36,7 +38,7 @@ class loginWindow(Screen):
     pwd = ObjectProperty(None)
 
     def read_data():
-        sqlEngine = create_engine('mysql+pymysql://python:python@127.0.0.1:3306', pool_recycle=3600)
+        sqlEngine = create_engine('mysql+pymysql://python:python@'+ host +':' + netPort, pool_recycle=3600)
         dbConnection = sqlEngine.connect()
         frame = pd.read_sql("select * from mysqldatabase.mysite_user", dbConnection);
         pd.set_option('display.expand_frame_repr', False)
@@ -73,7 +75,7 @@ class signupWindow(Screen):
     pwd = ObjectProperty(None)
 
     def read_data():
-        sqlEngine = create_engine('mysql+pymysql://python:python@127.0.0.1:3306', pool_recycle=3600)
+        sqlEngine = create_engine('mysql+pymysql://python:python@'+ host +':' + netPort, pool_recycle=3600)
         dbConnection = sqlEngine.connect()
         frame = pd.read_sql("select * from mysqldatabase.mysite_user", dbConnection);
         pd.set_option('display.expand_frame_repr', False)
@@ -101,7 +103,7 @@ class signupWindow(Screen):
                 # if name2 does not exist already then append to the csv file
                 # change current screen to log in the user now 
 
-                sqlEngine = create_engine('mysql+pymysql://python:python@127.0.0.1:3306/mysqldatabase', pool_recycle=3600)
+                sqlEngine = create_engine('mysql+pymysql://python:python@'+ host +':' + netPort + '/mysqldatabase', pool_recycle=3600)
                 dbConnection = sqlEngine.connect()
 
                 try:
