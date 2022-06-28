@@ -87,8 +87,8 @@ class signupWindow(Screen):
     def signupbtn(self):
   
         # creating a DataFrame of the info
-        user = pd.DataFrame([[self.name2.text, self.email.text, self.pwd.text]],
-                            columns = ['username', 'email', 'password'])
+        user = pd.DataFrame([[self.name2.text, self.email.text, self.pwd.text, 0]],
+                            columns = ['username', 'email', 'password','score'])
         
         if self.name2.text != "":
 
