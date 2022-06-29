@@ -19,6 +19,6 @@ from django.urls import path
 from mysite.views import RankingTableView
 
 urlpatterns = [
-    path('ranking/', RankingTableView.as_view()),
+    path('', RankingTableView.as_view()),
     path('admin/', admin.site.urls),
 ]
