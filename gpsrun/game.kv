@@ -11,8 +11,9 @@ WindowManager:
         size: root.width, root.height
 
         Label:
-            text: "Bienvenido a GpsRun \n tu reto es bla bla bla... Entendido?"
+            text: "Bienvenido a GpsRun \n ¿Quieres Jugar?"
             font_size: 32
+            halign: "center"
 
         Button:
             text: "Ok"
@@ -24,6 +25,7 @@ WindowManager:
 
     TabbedPanel:
         do_default_tab: False
+        tab_width: root.width / 3
         
         TabbedPanelItem:
             text: "Desafío"
@@ -32,7 +34,10 @@ WindowManager:
                 orientation: "vertical"
 
                 Label: 
-                    text: "Acertijo.... \n Tienes 10 segundos"
+                    text: "Acertijo...."
+                Label:
+                    text: "Tienes 3 minutos"
+                    
 
         TabbedPanelItem:
             text: "Mapa"
@@ -40,22 +45,25 @@ WindowManager:
             BoxLayout:
                 orientation: "vertical"
                 MapView:
-                    lat:-38.74769124798811
-                    lon:-72.6168291093502
+                    lat: -38.74719680168039
+                    lon: -72.6168759153446
                     zoom: 100
+                    on_zoom: 100 if self.zoom < 100 else self.zoom
+                    MapMarkerPopup:
+                        lat: -38.74719680168039
+                        lon: -72.6168759153446
+
 
         TabbedPanelItem:
-            text: "Tiempo"
+            text: "Tiempo Restante"
 
             BoxLayout:
                 orientation: "vertical"
 
                 Label: 
-                    text: "00:00"
-                    font_size: 20
+                    text: root.cont + " segundos restantes"
+                    font_size: 60
 
-        TabbedPanelItem:
-            text: "Instrucciones"
             
 <GameOver>:
     BoxLayout:

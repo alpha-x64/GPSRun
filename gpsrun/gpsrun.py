@@ -3,7 +3,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy_garden.mapview import MapView
 from kivy.clock import Clock
-from time import strftime
+from kivy.properties import StringProperty
 
 
 class FirstW(Screen):
@@ -11,11 +11,20 @@ class FirstW(Screen):
 
 class GpsRun(Screen):
 
+    cont = StringProperty("180")
+
+    def timer(self, dt):
+        self.cont = str(int(self.cont)-1)
+        if self.cont == "0":
+            self.obj.cancel()
+
     def switch(self, *args):
         self.parent.current = 'gameover'
 
     def on_enter(self, *args):
-        Clock.schedule_once(self.switch, 10)
+        Clock.schedule_once(self.switch, 180)
+        self.obj = Clock.schedule_interval(self.timer, 1)
+
 
 class GameOver(Screen):
     pass
@@ -37,6 +46,7 @@ sm.add_widget(WinW(name='win'))
 class GRApp(App):
     def build(self):
         return sm
+    
 
     
 
