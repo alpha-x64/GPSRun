@@ -8,13 +8,23 @@ from kivy.uix.popup import Popup
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.video import Video
-from sqlalchemy import create_engine
-import pymysql
-import pandas as pd
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import sessionmaker
+import sqlalchemy as db
 
-dataFilePath = 'login/login.csv'
+Base = declarative_base()
+
+class User(Base):
+    __tablename__ = 'mysite_user'
+    id = Column(Integer, primary_key =  True)
+    username = Column(String)
+    email = Column(String)
+    password = Column(String)
+    score = Column(Integer)
+
 host = 'bruselas.ceisufro.cl'
-netPort = '3306'
+port = '3306'
 
 # class to call the popup function
 class PopupWindow(Widget):
@@ -37,36 +47,37 @@ class loginWindow(Screen):
     user = ObjectProperty(None)
     pwd = ObjectProperty(None)
 
-    def read_data():
-        sqlEngine = create_engine('mysql+pymysql://python:python@'+ host +':' + netPort, pool_recycle=3600)
-        dbConnection = sqlEngine.connect()
-        frame = pd.read_sql("select * from mysqldatabase.mysite_user", dbConnection);
-        pd.set_option('display.expand_frame_repr', False)
-
-        dbConnection.close()
-
-        return frame
-
-    users = read_data()
-    
     def validate(self):
 
-        # validating if the email already exists 
-        if self.user.text not in self.users['username'].unique():
-            popFun()
+        def read_data():
+            sqlEngine = db.create_engine('mysql+pymysql://python:python@'+ host +':' + port + '/mysqldatabase', pool_recycle=3600)
+            dbConnection = sqlEngine.connect()
+
+            metadata = db.MetaData()
+            data = db.Table('mysite_user', metadata, autoload=True, autoload_with=sqlEngine)
+            query = db.select([data]) 
+            ResultProxy = dbConnection.execute(query)
+            ResultSet = ResultProxy.fetchall()
+            dbConnection.close()
+
+            return ResultSet
+
+        data = read_data()
+        matching_creds = False
+
+        for i in range(len(data)):
+            if self.user.text == data[i][1] and self.pwd.text == data[i][3]:
+                matching_creds = True
+                
+        if matching_creds:
+            # switching the current screen to display validation result
+            sm.current = 'logdata'
+
+            # reset TextInput widget
+            self.user.text = ""
+            self.pwd.text = ""
         else:
-
-            matching_creds  = (len(self.users[(self.users['username'] == self.user.text) & (self.users['password'].astype('str') == self.pwd.text)]) > 0)
-
-            if matching_creds:
-                # switching the current screen to display validation result
-                sm.current = 'logdata'
-    
-                # reset TextInput widget
-                self.user.text = ""
-                self.pwd.text = ""
-            else:
-                popFun()  
+            popFun()  
   
 # class to accept sign up info  
 class signupWindow(Screen):
@@ -74,46 +85,48 @@ class signupWindow(Screen):
     email = ObjectProperty(None)
     pwd = ObjectProperty(None)
 
-    def read_data():
-        sqlEngine = create_engine('mysql+pymysql://python:python@'+ host +':' + netPort, pool_recycle=3600)
-        dbConnection = sqlEngine.connect()
-        frame = pd.read_sql("select * from mysqldatabase.mysite_user", dbConnection);
-        pd.set_option('display.expand_frame_repr', False)
-        
-        dbConnection.close()
-
-        return frame
-    
-    users = read_data()
-
     def signupbtn(self):
-  
-        # creating a DataFrame of the info
-        user = pd.DataFrame([[self.name2.text, self.email.text, self.pwd.text, 0]],
-                            columns = ['username', 'email', 'password','score'])
-        
+
+        def read_data():
+            sqlEngine = db.create_engine('mysql+pymysql://python:python@'+ host +':' + port+ '/mysqldatabase', pool_recycle=3600)
+            dbConnection = sqlEngine.connect()
+            Session = sessionmaker(bind = sqlEngine)
+            session = Session()
+            result = session.query(User).all()
+            dbConnection.close()
+
+            return result
+
+        data = read_data()
+
         if self.name2.text != "":
 
-            
+            isUserUnique = True
 
-            if self.name2.text not in self.users['username'].unique():
+            for row in data:
+                if self.name2.text == row.username:
+                    isUserUnique = False
+                    break
+
+            if isUserUnique:
 
                 tablename = 'mysite_user'
-
-                # if name2 does not exist already then append to the csv file
-                # change current screen to log in the user now 
-
-                sqlEngine = create_engine('mysql+pymysql://python:python@'+ host +':' + netPort + '/mysqldatabase', pool_recycle=3600)
+                sqlEngine = db.create_engine('mysql+pymysql://python:python@'+ host +':' + port + '/mysqldatabase', pool_recycle=3600)
                 dbConnection = sqlEngine.connect()
+                new_user = User(username = self.name2.text,email = self.email.text,password = self.pwd.text,score = 0)
+
+                Session = sessionmaker(bind = sqlEngine)
+                session = Session()
 
                 try:
-                    user.to_sql(tablename, con = sqlEngine, if_exists = 'append', index = False)
+                    session.add(new_user)
+                    session.commit()
                 except ValueError as vx:
                     print(vx)
                 except Exception as ex:
                     print(ex)
                 else:
-                    print("Table %s created successfully."%tablename);
+                    print("Table %s created successfully.");
                 finally:
                     dbConnection.close()
 
