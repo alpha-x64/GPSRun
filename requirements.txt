@@ -4,3 +4,4 @@ Kivy==2.1.0
 SQLAlchemy==1.4.37
 PyMySQL==1.0.2
 mapview
+ffpyplayer
