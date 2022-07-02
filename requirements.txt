@@ -5,3 +5,4 @@ SQLAlchemy==1.4.37
 mysqlclient==2.1.0
 mapview
 ffpyplayer
+shapely

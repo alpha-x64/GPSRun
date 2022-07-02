@@ -1,4 +1,5 @@
-#: import MapView kivy_garden
+#:kivy 2.1.0
+#:import MapView kivy_garden
 WindowManager:
     FirstW:
     GpsRun:
@@ -44,14 +45,13 @@ WindowManager:
 
             BoxLayout:
                 orientation: "vertical"
-                MapView:
-                    lat: -38.7479046686124
-                    lon: -72.61820599434628
-                    zoom: 100
+                GpsRunMapView:
+                    lat: -38.746639244298464
+                    lon: -72.61560718899622
+                    zoom: 18
                     on_zoom: 100 if self.zoom < 100 else self.zoom
-                    MapMarkerPopup:
-                        lat: root.app_lat
-                        lon: root.app_lon
+                    on_lat: self.add_player(), self.start_getting_objectives_in_fov()
+                    on_lon: self.add_player(), self.start_getting_objectives_in_fov()
 
         TabbedPanelItem:
             text: "Tiempo Restante"
