@@ -2,14 +2,18 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy_garden.mapview import MapView
-from kivy.clock import Clock
+from kivy.clock import Clock, mainthread
 from kivy.properties import StringProperty
+from plyer import gps
 
 
 class FirstW(Screen):
     pass
 
 class GpsRun(Screen):
+
+    app_lat = -38.74719680168039
+    app_lon = -72.6168759153446
 
     cont = StringProperty("180")
 
@@ -24,6 +28,9 @@ class GpsRun(Screen):
     def on_enter(self, *args):
         Clock.schedule_once(self.switch, 180)
         self.obj = Clock.schedule_interval(self.timer, 1)
+
+
+
 
 
 class GameOver(Screen):

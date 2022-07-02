@@ -45,14 +45,13 @@ WindowManager:
             BoxLayout:
                 orientation: "vertical"
                 MapView:
-                    lat: -38.74719680168039
-                    lon: -72.6168759153446
+                    lat: -38.7479046686124
+                    lon: -72.61820599434628
                     zoom: 100
                     on_zoom: 100 if self.zoom < 100 else self.zoom
                     MapMarkerPopup:
-                        lat: -38.74719680168039
-                        lon: -72.6168759153446
-
+                        lat: root.app_lat
+                        lon: root.app_lon
 
         TabbedPanelItem:
             text: "Tiempo Restante"
