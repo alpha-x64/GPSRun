@@ -1,5 +1,6 @@
 #:kivy 2.1.0
 #:import MapView kivy_garden
+
 WindowManager:
     FirstW:
     GpsRun:
@@ -45,13 +46,58 @@ WindowManager:
 
             BoxLayout:
                 orientation: "vertical"
-                GpsRunMapView:
+
+                #GpsRunMapView:
+                MapView:
                     lat: -38.746639244298464
                     lon: -72.61560718899622
                     zoom: 18
                     on_zoom: 100 if self.zoom < 100 else self.zoom
-                    on_lat: self.add_player(), self.start_getting_objectives_in_fov()
-                    on_lon: self.add_player(), self.start_getting_objectives_in_fov()
+                    #on_lat: self.add_player(), self.start_getting_objectives_in_fov()
+                    #on_lon: self.add_player(), self.start_getting_objectives_in_fov()
+
+                    MapMarkerPopup:
+                        id: biblioteca
+                        lat: -38.74838393048031
+                        lon: -72.6175605760204
+                        Button: 
+                            size: root.width*0.1, root.height*0.1
+                            text: "Biblioteca"
+                            on_release: app.root.current = 'win'
+                    MapMarkerPopup:
+                        id: casino
+                        lat: -38.746975571477094
+                        lon: -72.61640320282768
+                        Button: 
+                            size: root.width*0.1, root.height*0.1
+                            text: "Casino"
+                            on_release: app.root.current = 'gameover'
+                    MapMarkerPopup:
+                        id: gimnasio
+                        lat: -38.74780605166607
+                        lon: -72.61801521044336
+                        Button: 
+                            size: root.width*0.1, root.height*0.1
+                            text: "Gimnasio"
+                            on_release: app.root.current = 'gameover'
+                    MapMarkerPopup:
+                        id: pabellon_d
+                        lat: -38.74808217895947
+                        lon: -72.61561999779056
+                        Button: 
+                            size: root.width*0.1, root.height*0.1
+                            text: "Pabellon D"
+                            on_release: app.root.current = 'gameover'
+                    MapMarkerPopup:
+                        id: pabellon_ra
+                        lat: -38.74721613977589
+                        lon: -72.61634687644846
+                        Button: 
+                            size: root.width*0.1, root.height*0.1
+                            text: "Paellon RA"
+                            on_release: app.root.current = 'gameover'
+
+
 
         TabbedPanelItem:
             text: "Tiempo Restante"
@@ -69,11 +115,23 @@ WindowManager:
         orientation: "vertical"
 
         Label:
-            text: "Se acabó el tiempo..."
+            text: "Perdiste..."
+        Button:
+            text: "Volver al inicio"
+            on_release: app.root.current = 'first'
 <WinW>:
+    id: win
     BoxLayout:
         orientation:"vertical"
 
         Label: 
-            text: "Lo lograste!"
+            text: "Lo lograste!\n Ganaste " + root.puntaje + " puntos"
+
+        Button:
+            text: "Reclamar puntaje"
+            on_release:
+
+        Button:
+            text: "Volver al inicio"
+            on_release: app.root.current = 'first'
     
