@@ -3,9 +3,11 @@
 
 WindowManager:
     FirstW:
+    Tutorial:
     GpsRun:
     GameOver:
-    WinW:
+    Win:
+
 
 <FirstW>:
     BoxLayout:
@@ -22,12 +24,32 @@ WindowManager:
             font_size: 32
             on_release: app.root.current = 'gpsrun'
 
+        Button:
+            text: "Instrucciones"
+            on_release: app.root.current = 'tutorial'
+
+<Tutorial>:
+    BoxLayout:
+        orientation: "vertical"
+
+        Label:
+            text: "Como Jugar:"
+        Label:
+            text: "-Tienes que adivinar el lugar en el mapa antes que se acabe el tiempo"
+        Label:
+            text: "-En el mapa tendrás que presionar el marcador/boton para elegir la ubicación"
+        Label:
+            text: "-Si aciertas ganaras puntos dependiendo de que tan rápido contestarás, y si te equivocas perderás puntos"
+        Button:
+            text: "Volver"
+            on_release: app.root.current = 'first'
+
 <GpsRun>:
     markup: True
 
     TabbedPanel:
         do_default_tab: False
-        tab_width: root.width / 3
+        tab_width: root.width / 2
         
         TabbedPanelItem:
             text: "Desafío"
@@ -36,9 +58,9 @@ WindowManager:
                 orientation: "vertical"
 
                 Label: 
-                    text: "Acertijo...."
+                    text: "Cerca del casino y empieza con P"
                 Label:
-                    text: "Tienes 3 minutos"
+                    text: root.cont + " segundos restantes"
                     
 
         TabbedPanelItem:
@@ -49,8 +71,8 @@ WindowManager:
 
                 #GpsRunMapView:
                 MapView:
-                    lat: -38.746639244298464
-                    lon: -72.61560718899622
+                    lat: -38.74777685568625
+                    lon: -72.61683138418861
                     zoom: 18
                     on_zoom: 100 if self.zoom < 100 else self.zoom
                     #on_lat: self.add_player(), self.start_getting_objectives_in_fov()
@@ -96,19 +118,6 @@ WindowManager:
                             size: root.width*0.1, root.height*0.1
                             text: "Paellon RA"
                             on_release: app.root.current = 'gameover'
-
-
-
-        TabbedPanelItem:
-            text: "Tiempo Restante"
-
-            BoxLayout:
-                orientation: "vertical"
-
-                Label: 
-                    text: root.cont + " segundos restantes"
-                    font_size: 60
-
             
 <GameOver>:
     BoxLayout:
@@ -119,7 +128,7 @@ WindowManager:
         Button:
             text: "Volver al inicio"
             on_release: app.root.current = 'first'
-<WinW>:
+<Win>:
     id: win
     BoxLayout:
         orientation:"vertical"

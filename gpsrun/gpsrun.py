@@ -14,6 +14,9 @@ from kivy.properties import StringProperty, NumericProperty
 class FirstW(Screen):
     pass
 
+class Tutorial(Screen):
+    pass
+
 #class GpsRunMapView(MapView):
 
     #player = PlayerMarker()
@@ -58,30 +61,35 @@ class GpsRun(Screen):
     app_lat = NumericProperty(-38.74719680168039)
     app_lon = NumericProperty(-72.6168759153446)
 
-    cont = StringProperty("180")
+    cont = StringProperty("10")
 
     def timer(self, dt):
         self.cont = str(int(self.cont)-1)
         if self.cont == "0":
-            self.obj.cancel()
-
-    def switch(self, *args):
-        self.parent.current = 'gameover'
+            self.time.cancel()
+            self.parent.current = 'gameover'
+  
 
     #def add_objective(self, objective):
     #     self.add_widget(objective)
     #         pass
-
+    
+ 
     def on_enter(self, *args):
-        Clock.schedule_once(self.switch, 180)
-        self.obj = Clock.schedule_interval(self.timer, 1)
+        self.cont = "10"
+        self.time = Clock.schedule_interval(self.timer, 1)
+
+    def on_leave(self, *args):
+        self.time.cancel()
+        
+    
 
 class GameOver(Screen):
     pass
 
-class WinW(Screen):
+class Win(Screen):
     puntaje = StringProperty("5")
-
+    
 
 class WindowManager(ScreenManager):
     pass
@@ -90,9 +98,10 @@ kv = Builder.load_file('game.kv')
 sm = ScreenManager()
 
 sm.add_widget(FirstW(name='first'))
+sm.add_widget(Tutorial(name='tutorial'))
 sm.add_widget(GpsRun(name='gpsrun'))
 sm.add_widget(GameOver(name='gameover'))
-sm.add_widget(WinW(name='win'))
+sm.add_widget(Win(name='win'))
 
 class GRApp(App):
     def build(self):
