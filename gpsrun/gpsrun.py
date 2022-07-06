@@ -1,3 +1,4 @@
+import os
 from turtle import pos
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -10,6 +11,7 @@ from kivy.properties import StringProperty, NumericProperty
 #from shapely.geometry import Point
 #from shapely.geometry.polygon import Polygon
 
+path = os.path.dirname(os.path.abspath(__file__))
 
 class FirstW(Screen):
     pass
@@ -94,7 +96,7 @@ class Win(Screen):
 class WindowManager(ScreenManager):
     pass
 
-kv = Builder.load_file('game.kv')
+kv = Builder.load_file(path + '/game.kv')
 sm = ScreenManager()
 
 sm.add_widget(FirstW(name='first'))
