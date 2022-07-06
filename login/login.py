@@ -82,7 +82,7 @@ class loginWindow(Screen):
             popFun()
 
     def get_path(self):
-        return path + "/intro.mp4
+        return path + "/intro.mp4"
             
 # class to accept sign up info  
 class signupWindow(Screen):
