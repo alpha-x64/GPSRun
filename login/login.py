@@ -1,4 +1,5 @@
 # import all the relevant classes
+import os
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -13,6 +14,7 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import sessionmaker
 import sqlalchemy as db
 
+path = os.path.dirname(os.path.abspath(__file__))
 Base = declarative_base()
 
 class User(Base):
@@ -77,8 +79,11 @@ class loginWindow(Screen):
             self.user.text = ""
             self.pwd.text = ""
         else:
-            popFun()  
-  
+            popFun()
+
+    def get_path(self):
+        return path + "/intro.mp4
+            
 # class to accept sign up info  
 class signupWindow(Screen):
     name2 = ObjectProperty(None)
@@ -151,7 +156,7 @@ class windowManager(ScreenManager):
     pass
   
 # kv file
-kv = Builder.load_file('login.kv')
+kv = Builder.load_file(path + '/login.kv')
 sm = windowManager()
 
 # adding screens
