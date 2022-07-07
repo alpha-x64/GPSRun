@@ -6,3 +6,4 @@ mysqlclient==2.1.0
 mapview
 ffpyplayer
 shapely
+pymysql

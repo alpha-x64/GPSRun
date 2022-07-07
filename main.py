@@ -13,6 +13,7 @@ from kivy.uix.video import Video
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import select, update
 import sqlalchemy as db
 from kivy_garden.mapview import MapView
 from kivy.clock import Clock
@@ -50,6 +51,7 @@ def popFun():
   
 # class to accept user info and validate it
 class loginWindow(Screen):
+    app_user = User()
     user = ObjectProperty(None)
     pwd = ObjectProperty(None)
 
@@ -70,9 +72,11 @@ class loginWindow(Screen):
 
         data = read_data()
         matching_creds = False
+        user_id = -1
 
         for i in range(len(data)):
             if self.user.text == data[i][1] and self.pwd.text == data[i][3]:
+                user_id = data[i][0]
                 matching_creds = True
                 
         if matching_creds:
@@ -82,6 +86,16 @@ class loginWindow(Screen):
             # reset TextInput widget
             self.user.text = ""
             self.pwd.text = ""
+
+            sqlEngine = db.create_engine('mysql+pymysql://python:python@'+ host +':' + port+ '/proyecto_gpsrun', pool_recycle=3600)
+            dbConnection = sqlEngine.connect()
+            Session = sessionmaker(bind = sqlEngine)
+            session = Session()
+#            result = session.execute(select(User).where(User.id == user_id))
+            result = session.query(User).filter(User.id == user_id)
+            dbConnection.close()
+
+            self.app_user = result.first()
         else:
             popFun()
 
@@ -156,7 +170,9 @@ class logDataWindow(Screen):
     pass
 
 class GpsRunMapView(MapView):
-    pass
+    def on_zoom(self, *args):
+        self.zoom = 15 if self.zoom < 15 else self.zoom
+    
 
 class FirstW(Screen):
     pass
@@ -169,15 +185,16 @@ class GpsRun(Screen):
     partida = 0
     lugar = "gim"
     riddle = StringProperty()
+    puntos = NumericProperty(5)
     cont = StringProperty("15")
 
     getting_objectives_timer = None
     objs = []
 
     mapvw = GpsRunMapView()
-    app_lat = -38.746639244298464
-    app_lon = -72.61560718899622
-    app_zoom = 18
+    app_lat = -38.74771029503626
+    app_lon = -72.61674444561854
+    app_zoom = 17
 
 
     def timer(self, dt):
@@ -245,14 +262,35 @@ class GpsRun(Screen):
     def chosen_loc(self, loc):
         print(loc + " activado")
         if (loc == self.lugar):
-            print("ganaste!!")
             self.parent.current = 'win'
-            # agrega puntaje y blahblahbasdasf
+            
+
+            sqlEngine = db.create_engine('mysql+pymysql://python:python@'+ host +':' + port + '/proyecto_gpsrun', pool_recycle=3600)
+            dbConnection = sqlEngine.connect()
+
+            Session = sessionmaker(bind = sqlEngine)
+            session = Session()
+
+            user = self.manager.get_screen("login").app_user
+
+            
+
+            try:
+#                session.query(User).filter(User.id == user.id).update({User.id: user.score + self.puntos}, synchronize_session = False)
+                session.execute(update(User).where(User.id == user.id).values(score = user.score + self.puntos))
+                session.commit()
+            except ValueError as vx:
+                print(vx)
+            except Exception as ex:
+                print(ex)
+            else:
+                print("Table %s created successfully.");
+            finally:
+                dbConnection.close()
     
     def on_leave(self, *args):
         self.time.cancel()
         self.objs.clear()
-
 
 class ObjectiveMarker(MapMarkerPopup):
 
