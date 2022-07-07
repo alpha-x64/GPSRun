@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mysqldatabase',
+        'NAME': 'proyecto_gpsrun',
         'USER': 'python',
         'PASSWORD': 'python',
         'HOST': '127.0.0.1',

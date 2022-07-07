@@ -56,7 +56,7 @@ class loginWindow(Screen):
     def validate(self):
 
         def read_data():
-            sqlEngine = db.create_engine('mysql+pymysql://python:python@'+ host +':' + port + '/mysqldatabase', pool_recycle=3600)
+            sqlEngine = db.create_engine('mysql+pymysql://python:python@'+ host +':' + port + '/proyecto_gpsrun', pool_recycle=3600)
             dbConnection = sqlEngine.connect()
 
             metadata = db.MetaData()
@@ -97,7 +97,7 @@ class signupWindow(Screen):
     def signupbtn(self):
 
         def read_data():
-            sqlEngine = db.create_engine('mysql+pymysql://python:python@'+ host +':' + port+ '/mysqldatabase', pool_recycle=3600)
+            sqlEngine = db.create_engine('mysql+pymysql://python:python@'+ host +':' + port+ '/proyecto_gpsrun', pool_recycle=3600)
             dbConnection = sqlEngine.connect()
             Session = sessionmaker(bind = sqlEngine)
             session = Session()
@@ -120,7 +120,7 @@ class signupWindow(Screen):
             if isUserUnique:
 
                 tablename = 'mysite_user'
-                sqlEngine = db.create_engine('mysql+pymysql://python:python@'+ host +':' + port + '/mysqldatabase', pool_recycle=3600)
+                sqlEngine = db.create_engine('mysql+pymysql://python:python@'+ host +':' + port + '/proyecto_gpsrun', pool_recycle=3600)
                 dbConnection = sqlEngine.connect()
                 new_user = User(username = self.name2.text,email = self.email.text,password = self.pwd.text,score = 0)
 
