@@ -1,9 +1,16 @@
 #:kivy 2.1.0
-# there are three screens
+#:import MapView kivy_garden
+
+# there are eight screens
 windowManager:
     loginWindow:
     signupWindow:
     logDataWindow:
+    FirstW:
+    Tutorial:
+    GpsRun:
+    GameOver:
+    Win:
 
 # GUI for the login window
 <loginWindow>:
@@ -118,6 +125,10 @@ windowManager:
             on_release: 
                 app.root.current = 'signup'
                 root.manager.transition.direction = "down"
+        Button:
+            text: "Ir al juego"
+            on_release: 
+                app.root.current = 'first'
   
   
 # GUI for pop up window
@@ -126,3 +137,92 @@ windowManager:
         text : "Por favor ingrese información válida"
         size_hint : 0.2, 0.1
         pos_hint : {"x" : 0.4, "top" : 0.8}
+
+<FirstW>:
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+
+        Label:
+            text: "Bienvenido a GpsRun \n ¿Quieres Jugar?"
+            font_size: 32
+            halign: "center"
+
+        Button:
+            text: "Ok"
+            font_size: 32
+            on_release: app.root.current = 'gpsrun'
+
+        Button:
+            text: "Instrucciones"
+            on_release: app.root.current = 'tutorial'
+
+
+<Tutorial>:
+    BoxLayout:
+        orientation: "vertical"
+
+        Label:
+            text: "Como Jugar:"
+        Label:
+            text: "-Tienes que adivinar el lugar en el mapa antes que se acabe el tiempo"
+        Label:
+            text: "-En el mapa tendrás que presionar el marcador/boton para elegir la ubicación"
+        Label:
+            text: "-Si aciertas ganaras puntos dependiendo de que tan rápido contestarás, y si te equivocas perderás puntos"
+        Button:
+            text: "Volver"
+            on_release: app.root.current = 'first'
+
+<GpsRun>:
+    markup: True
+
+    TabbedPanel:
+        do_default_tab: False
+        tab_width: root.width / 2
+        
+        TabbedPanelItem:
+            text: "Desafío"
+
+            BoxLayout:
+                orientation: "vertical"
+
+                Label: 
+                    text: root.riddle
+                Label:
+                    text: root.cont + " segundos restantes"
+                    
+
+        TabbedPanelItem:
+            text: "Mapa"
+
+            BoxLayout:
+                orientation: "vertical"
+
+                #GpsRunMapView:
+            
+<GameOver>:
+    BoxLayout:
+        orientation: "vertical"
+
+        Label:
+            text: "Perdiste..."
+        Button:
+            text: "Volver al inicio"
+            on_release: app.root.current = 'first'
+<Win>:
+    id: win
+    BoxLayout:
+        orientation:"vertical"
+
+        Label: 
+            text: "Lo lograste!\n Ganaste " + root.puntaje + " puntos"
+
+        Button:
+            text: "Reclamar puntaje"
+            on_release:
+
+        Button:
+            text: "Volver al inicio"
+            on_release: app.root.current = 'first'
+    
